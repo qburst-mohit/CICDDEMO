@@ -36,16 +36,20 @@ jobs:
         run: npm install
 
       # ---------- Test Metrics ----------
-      - name: Run unit tests and capture report
+      - name: Run unit tests and generate report
         run: |
           echo "TEST_EXECUTION_START=$(date +%s)" | tee -a ci-metrics.txt
-          npx jest --ci --runInBand --verbose | tee test-output.log
+          npx jest --ci --runInBand --json --outputFile=test-report.json
           echo "TEST_EXECUTION_END=$(date +%s)" | tee -a ci-metrics.txt
 
-      - name: Append test summary to CI metrics
+      - name: Append test report summary to CI metrics
         run: |
           echo "TEST_SUMMARY_START" | tee -a ci-metrics.txt
-          grep -E "Test Suites:|Tests:" test-output.log | tee -a ci-metrics.txt
+          node -e "
+            const r = require('./test-report.json');
+            console.log('Test Suites:', r.numPassedTestSuites + ' passed,', r.numTotalTestSuites + ' total');
+            console.log('Tests:', r.numPassedTests + ' passed,', r.numTotalTests + ' total');
+          " | tee -a ci-metrics.txt
           echo "TEST_SUMMARY_END" | tee -a ci-metrics.txt
 
       - name: Mark test success
