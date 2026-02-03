@@ -58,7 +58,15 @@ jobs:
 
       - name: Mark test failure
         if: failure()
-        run: echo "TEST_STATUS=FAILED" | tee -a ci-metrics.txt
+        run:
+          echo "TEST_STATUS=FAILED" | tee -a ci-metrics.txt
+
+          # ---------- Upload Test Report ----------
+      - name: Upload test report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test-report.json
 
       # ---------- Cache ----------
       - name: Cache Gradle
