@@ -39,8 +39,14 @@ jobs:
       - name: Run unit tests and capture report
         run: |
           echo "TEST_EXECUTION_START=$(date +%s)" | tee -a ci-metrics.txt
-          npm test -- --ci --runInBand --verbose | tee test-output.log
+          npx jest --ci --runInBand --verbose | tee test-output.log
           echo "TEST_EXECUTION_END=$(date +%s)" | tee -a ci-metrics.txt
+
+      - name: Append test summary to CI metrics
+        run: |
+          echo "TEST_SUMMARY_START" | tee -a ci-metrics.txt
+          grep -E "Test Suites:|Tests:" test-output.log | tee -a ci-metrics.txt
+          echo "TEST_SUMMARY_END" | tee -a ci-metrics.txt
 
       - name: Mark test success
         if: success()
