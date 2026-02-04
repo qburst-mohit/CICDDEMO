@@ -7,7 +7,7 @@ describe('CI/CD Calculator Metrics Tests', () => {
   });
 
   test('SUB: returns correct difference', () => {
-    expect(sub(5, 3)).toBe(10);
+    expect(sub(5, 3)).toBe(2);
   });
 
   test('MUL: returns correct product', () => {
