@@ -58,10 +58,9 @@ jobs:
 
       - name: Mark test failure
         if: failure()
-        run:
-          echo "TEST_STATUS=FAILED" | tee -a ci-metrics.txt
+        run: echo "TEST_STATUS=FAILED" | tee -a ci-metrics.txt
 
-          # ---------- Upload Test Report ----------
+      # ---------- Upload Test Report ----------
       - name: Upload test report artifact
         uses: actions/upload-artifact@v4
         with:
@@ -121,6 +120,26 @@ jobs:
           path: |
             ci-metrics.txt
             test-output.log
+
+      # =====================================================
+      # PROMETHEUS INTEGRATION
+      # =====================================================
+
+      - name: Convert CI metrics to Prometheus format
+        run: |
+          echo "ci_build_duration_seconds $(grep BUILD_DURATION_SECONDS ci-metrics.txt | cut -d= -f2)" > prom-metrics.txt
+          echo "ci_build_status{status=\"$(grep BUILD_STATUS ci-metrics.txt | cut -d= -f2)\"} 1" >> prom-metrics.txt
+          echo "ci_test_status{status=\"$(grep TEST_STATUS ci-metrics.txt | cut -d= -f2)\"} 1" >> prom-metrics.txt
+
+      - name: Push CI metrics to Pushgateway
+        run: |
+          curl -X POST \
+            "${{ secrets.PUSHGATEWAY_URL }}/metrics/job/github_ci" \
+            --data-binary @prom-metrics.txt
+
+      # =====================================================
+      # PROMETHEUS INTEGRATION END
+      # =====================================================
 
   # ---------- Deployment Metrics Job ----------
   deploy-production:
