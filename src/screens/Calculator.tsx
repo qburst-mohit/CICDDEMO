@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: 'center' },
   title: {
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: '500',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     alignItems: 'center',
   },
-  buttonText: { fontWeight: '600' },
+  buttonText: { fontWeight: '500' },
   result: { marginTop: 20, fontSize: 18, textAlign: 'center' },
 });
 
