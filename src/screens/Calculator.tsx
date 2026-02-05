@@ -19,7 +19,7 @@ const Calculator = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Basic Calculator</Text>
+      <Text style={styles.title}>Mohit Calculator</Text>
 
       <TextInput
         placeholder="Input 1"
