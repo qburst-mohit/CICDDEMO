@@ -19,12 +19,13 @@ jobs:
       - name: Initialize CI metrics file
         run: echo "CI METRICS REPORT" > ci-metrics.txt
 
-      # ---------- Setup ----------
+      # ---------- Setup Node ----------
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # ---------- Setup Java ----------
       - name: Setup Java (JDK 17)
         uses: actions/setup-java@v4
         with:
